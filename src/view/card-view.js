@@ -1,6 +1,6 @@
 import {COMMENTS} from '../mock/film.js';
 
-export const createCardTemplate = ({name, poster, rating, realiseDate, duration, description, genres, commentId}) => {
+export const createCardTemplate = ({name, poster, rating, realiseDate, duration, description, genres, comments}) => {
   const visibleDescription = description.length > 140 ? `${description.slice(0, 139)}...` : description;
 
   return `
@@ -15,7 +15,7 @@ export const createCardTemplate = ({name, poster, rating, realiseDate, duration,
       </p>
       <img src="./images/posters/${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${visibleDescription}</p>
-      <span class="film-card__comments">${COMMENTS[commentId].length} comments</span>
+      <span class="film-card__comments">${COMMENTS[comments].length} comments</span>
     </a>
     <div class="film-card__controls">
       <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
