@@ -64,3 +64,25 @@ for (let i = 0; i < FILM_COUNT; i++) {
     renderTemplate(commentList, createFilmComment(comments[j]), RenderPosition.BEFOREEND);
   }
 }
+
+const showMoreButton = document.querySelector('.films-list__show-more');
+const showingFilms = films.slice(FILM_COUNT);
+
+showMoreButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+
+  if (showingFilms.length > FILM_COUNT) {
+    for (let i = 0; i < FILM_COUNT; i++) {
+      renderTemplate(filmListContainer, createCardTemplate(showingFilms[i]), RenderPosition.BEFOREEND);
+    }
+    showingFilms.splice(0, FILM_COUNT);
+  } else if (showingFilms.length !== 0 && showingFilms.length <= FILM_COUNT) {
+    for (let i = 0; i < showingFilms.length; i++) {
+      renderTemplate(filmListContainer, createCardTemplate(showingFilms[i]), RenderPosition.BEFOREEND);
+    }
+
+    showMoreButton.remove();
+  } else {
+    showMoreButton.remove();
+  }
+});
