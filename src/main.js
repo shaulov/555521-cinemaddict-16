@@ -66,19 +66,19 @@ for (let i = 0; i < FILM_COUNT; i++) {
 }
 
 const showMoreButton = document.querySelector('.films-list__show-more');
-const showingFilms = films.slice(FILM_COUNT);
+const visibleFilms = films.slice(FILM_COUNT);
 
 showMoreButton.addEventListener('click', (evt) => {
   evt.preventDefault();
 
-  if (showingFilms.length > FILM_COUNT) {
+  if (visibleFilms.length > FILM_COUNT) {
     for (let i = 0; i < FILM_COUNT; i++) {
-      renderTemplate(filmListContainer, createCardTemplate(showingFilms[i]), RenderPosition.BEFOREEND);
+      renderTemplate(filmListContainer, createCardTemplate(visibleFilms[i]), RenderPosition.BEFOREEND);
     }
-    showingFilms.splice(0, FILM_COUNT);
-  } else if (showingFilms.length !== 0 && showingFilms.length <= FILM_COUNT) {
-    for (let i = 0; i < showingFilms.length; i++) {
-      renderTemplate(filmListContainer, createCardTemplate(showingFilms[i]), RenderPosition.BEFOREEND);
+    visibleFilms.splice(0, FILM_COUNT);
+  } else if (visibleFilms.length !== 0 && visibleFilms.length <= FILM_COUNT) {
+    for (let i = 0; i < visibleFilms.length; i++) {
+      renderTemplate(filmListContainer, createCardTemplate(visibleFilms[i]), RenderPosition.BEFOREEND);
     }
 
     showMoreButton.remove();

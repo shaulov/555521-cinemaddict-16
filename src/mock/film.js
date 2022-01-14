@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {getRandomInteger} from '../ustil.js';
 
-const FILM_NAME = [
+const filmsName = [
   'Made For Each Other',
   'Popeye Meets Sinbad',
   'Sagebrush Trail',
@@ -11,7 +11,7 @@ const FILM_NAME = [
   'The Man With The Golden Arm',
 ];
 
-const POSTER = [
+const posters = [
   'made-for-each-other.png',
   'popeye-meets-sinbad.png',
   'sagebrush-trail.jpg',
@@ -21,7 +21,7 @@ const POSTER = [
   'the-man-with-the-golden-arm.jpg',
 ];
 
-const DIRECTOR = [
+const directors = [
   'Steven Spielberg',
   'Martin Scorsese',
   'Ridley Scott',
@@ -32,7 +32,7 @@ const DIRECTOR = [
   'Peter Jackson',
 ];
 
-const AGE_RATING = [
+const ageRatings = [
   '0+',
   '6+',
   '12+',
@@ -179,20 +179,20 @@ export const COMMENTS = {
 };
 
 export const generateFilm = () => ({
-  name: getArrayElement(FILM_NAME),
-  originalName: getArrayElement(FILM_NAME),
-  poster: getArrayElement(POSTER),
+  name: getArrayElement(filmsName),
+  originalName: getArrayElement(filmsName),
+  poster: getArrayElement(posters),
   comments: getRandomInteger(0, 6),
   rating: getRandomInteger(5, 9),
   realiseDate: generateRealiseDate(),
   duration: generateDuration(),
-  director: getArrayElement(DIRECTOR),
+  director: getArrayElement(directors),
   writers: ['Doja Cat', 'Fernando Magelan'],
   cast: ['Johnny Depp', 'Miki Rurk', 'Francesco Fellini'],
   country: 'Argentina',
   genres: ['Thriller', 'Drama', 'Melodrama'],
   description: generateDescription(),
-  ageRating: getArrayElement(AGE_RATING),
+  ageRating: getArrayElement(ageRatings),
   isWatchlist: getRandomInteger(0, 1),
   isHistory: getRandomInteger(0, 1),
   isFavorite: getRandomInteger(0, 1),
