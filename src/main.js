@@ -10,6 +10,7 @@ import {createDetailGenre} from './view/detail-genre-view.js';
 import {createFilmCommentContainer} from './view/comment-container-view.js';
 import {createFilmComment} from './view/comment-view.js';
 import {createNewCommentContainer} from './view/new-comment-view.js';
+import {renderElement, RenderPosition} from './render.js';
 import {generateFilm, COMMENTS} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
 
@@ -17,13 +18,6 @@ const FILM_COUNT = 5;
 
 const films = Array.from({length: 15}, generateFilm);
 const filters = generateFilter(films);
-
-const RenderPosition = {
-  BEFOREBEGIN: 'beforebegin',
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-  AFTEREND: 'afterend',
-};
 
 const renderTemplate = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
