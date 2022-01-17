@@ -1,15 +1,15 @@
 import UserRateView from './view/user-rate-view.js';
 import {createSiteMenuTemplate} from './view/site-menu-view.js';
-import {createSortTemplate} from './view/sort-view.js';
-import {createContentContainerTemplate} from './view/content-container-view.js';
+import SortView from './view/sort-view.js';
+import ContentContainerView from './view/content-container-view.js';
 import {createCardTemplate} from './view/card-view.js';
-import {createShowMoreButtonTemplate} from './view/show-more-button-view.js';
-import {createStatisticTemplate} from './view/statictic-view.js';
+import ShowMoreButtonView from './view/show-more-button-view.js';
+import StatisticView from './view/statictic-view.js';
 import {createInfoPopupTemplate} from './view/info-popup-view.js';
 import {createDetailGenre} from './view/detail-genre-view.js';
 import {createFilmCommentContainer} from './view/comment-container-view.js';
 import {createFilmComment} from './view/comment-view.js';
-import {createNewCommentContainer} from './view/new-comment-view.js';
+import NewCommentView from './view/new-comment-view.js';
 import {renderElement, RenderPosition} from './render.js';
 import {generateFilm, COMMENTS} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
@@ -28,15 +28,15 @@ renderElement(siteHeader, new UserRateView().element, RenderPosition.BEFOREEND);
 
 const siteMain = document.querySelector('.main');
 renderTemplate(siteMain, createSiteMenuTemplate(filters), RenderPosition.BEFOREEND);
-renderTemplate(siteMain, createSortTemplate(), RenderPosition.BEFOREEND);
-renderTemplate(siteMain, createContentContainerTemplate(), RenderPosition.BEFOREEND);
+renderElement(siteMain, new SortView().element, RenderPosition.BEFOREEND);
+renderElement(siteMain, new ContentContainerView().element, RenderPosition.BEFOREEND);
 
 const filmListContainer = siteMain.querySelector('.films-list__container');
 
 const siteFooter = document.querySelector('.footer');
 const footerStatistic = siteFooter.querySelector('.footer__statistics');
-renderTemplate(footerStatistic, createStatisticTemplate(), RenderPosition.BEFOREEND);
-renderTemplate(filmListContainer, createShowMoreButtonTemplate(), RenderPosition.AFTEREND);
+renderElement(footerStatistic, new StatisticView().element, RenderPosition.BEFOREEND);
+renderElement(filmListContainer, new ShowMoreButtonView().element, RenderPosition.AFTEREND);
 
 for (let i = 0; i < FILM_COUNT; i++) {
   renderTemplate(filmListContainer, createCardTemplate(films[i]), RenderPosition.BEFOREEND);
@@ -51,7 +51,7 @@ for (let i = 0; i < FILM_COUNT; i++) {
   // renderTemplate(filmCommentContainer, createFilmCommentContainer(comments.length), RenderPosition.BEFOREEND);
 
   // const newFilmCommentContainer = document.querySelector('.film-details__comments-wrap');
-  // renderTemplate(newFilmCommentContainer, createNewCommentContainer(), RenderPosition.BEFOREEND);
+  // renderElement(newFilmCommentContainer, new NewCommentView().element, RenderPosition.BEFOREEND);
 
   // const commentList = document.querySelector('.film-details__comments-list');
   // for (let j = 0; j < comments.length; j++) {
