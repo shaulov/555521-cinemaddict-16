@@ -6,7 +6,7 @@ import {createCardTemplate} from './view/card-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import StatisticView from './view/statictic-view.js';
 import {createInfoPopupTemplate} from './view/info-popup-view.js';
-import {createDetailGenre} from './view/detail-genre-view.js';
+import DetailGenreView from './view/detail-genre-view.js';
 import {createFilmCommentContainer} from './view/comment-container-view.js';
 import {createFilmComment} from './view/comment-view.js';
 import NewCommentView from './view/new-comment-view.js';
@@ -40,23 +40,23 @@ renderElement(filmListContainer, new ShowMoreButtonView().element, RenderPositio
 
 for (let i = 0; i < FILM_COUNT; i++) {
   renderTemplate(filmListContainer, createCardTemplate(films[i]), RenderPosition.BEFOREEND);
-  // renderTemplate(siteFooter, createInfoPopupTemplate(films[0]), RenderPosition.AFTEREND);
+}
 
-  // const filmDetailsContainer = document.querySelector('.film-details__table');
-  // renderTemplate(filmDetailsContainer, createDetailGenre(films[0].genres), RenderPosition.BEFOREEND);
+renderTemplate(siteFooter, createInfoPopupTemplate(films[0]), RenderPosition.AFTEREND);
+const filmDetailsContainer = document.querySelector('.film-details__table').children[0];
+renderElement(filmDetailsContainer, new DetailGenreView(films[0].genres).element, RenderPosition.BEFOREEND);
 
-  // const comments = COMMENTS[films[i].comments];
+const comments = COMMENTS[films[0].comments];
 
-  // const filmCommentContainer = document.querySelector('.film-details__bottom-container');
-  // renderTemplate(filmCommentContainer, createFilmCommentContainer(comments.length), RenderPosition.BEFOREEND);
+const filmCommentContainer = document.querySelector('.film-details__bottom-container');
+renderTemplate(filmCommentContainer, createFilmCommentContainer(comments.length), RenderPosition.BEFOREEND);
 
-  // const newFilmCommentContainer = document.querySelector('.film-details__comments-wrap');
-  // renderElement(newFilmCommentContainer, new NewCommentView().element, RenderPosition.BEFOREEND);
+const newFilmCommentContainer = document.querySelector('.film-details__comments-wrap');
+renderElement(newFilmCommentContainer, new NewCommentView().element, RenderPosition.BEFOREEND);
 
-  // const commentList = document.querySelector('.film-details__comments-list');
-  // for (let j = 0; j < comments.length; j++) {
-  //   renderTemplate(commentList, createFilmComment(comments[j]), RenderPosition.BEFOREEND);
-  // }
+const commentList = document.querySelector('.film-details__comments-list');
+for (let j = 0; j < comments.length; j++) {
+  renderTemplate(commentList, createFilmComment(comments[j]), RenderPosition.BEFOREEND);
 }
 
 const showMoreButton = document.querySelector('.films-list__show-more');
