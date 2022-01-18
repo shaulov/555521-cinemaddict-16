@@ -23,7 +23,8 @@ export const renderElement = (container, element, place) => {
 };
 
 export const createElement = (template) => {
-  const newElement = document.createElement('div');
+  const newElement = template.includes('<tr') ? document.createElement('tbody') : document.createElement('div');
+  // const newElement = document.createElement('div');
   newElement.innerHTML = template;
 
   return newElement.firstChild;
