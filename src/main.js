@@ -1,14 +1,16 @@
 import UserRateView from './view/user-rate-view.js';
-import {createSiteMenuTemplate} from './view/site-menu-view.js';
+import SiteMenuView from './view/site-menu-view.js';
 import SortView from './view/sort-view.js';
 import ContentContainerView from './view/content-container-view.js';
 import CardView from './view/card-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import StatisticView from './view/statictic-view.js';
-import {createInfoPopupTemplate} from './view/info-popup-view.js';
+import PopupContainerView from './view/popup-container-view.js';
+import InfoPopupTopView from './view/info-popup-top-view.js';
+import InfoPopupBottomView from './view/info-popup-bottom-view.js';
 import DetailGenreView from './view/detail-genre-view.js';
-import {createFilmCommentContainer} from './view/comment-container-view.js';
-import {createFilmComment} from './view/comment-view.js';
+import FilmCommentContainerView from './view/comment-container-view.js';
+import FilmCommentView from './view/comment-view.js';
 import NewCommentView from './view/new-comment-view.js';
 import {renderElement, RenderPosition} from './render.js';
 import {generateFilm, COMMENTS} from './mock/film.js';
@@ -19,15 +21,11 @@ const FILM_COUNT = 5;
 const films = Array.from({length: 15}, generateFilm);
 const filters = generateFilter(films);
 
-const renderTemplate = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const siteHeader = document.querySelector('.header');
 renderElement(siteHeader, new UserRateView().element, RenderPosition.BEFOREEND);
 
 const siteMain = document.querySelector('.main');
-renderTemplate(siteMain, createSiteMenuTemplate(filters), RenderPosition.BEFOREEND);
+renderElement(siteMain, new SiteMenuView(filters).element, RenderPosition.BEFOREEND);
 renderElement(siteMain, new SortView().element, RenderPosition.BEFOREEND);
 renderElement(siteMain, new ContentContainerView().element, RenderPosition.BEFOREEND);
 
@@ -41,22 +39,24 @@ renderElement(filmListContainer, new ShowMoreButtonView().element, RenderPositio
 for (let i = 0; i < FILM_COUNT; i++) {
   renderElement(filmListContainer, new CardView(films[i]).element, RenderPosition.BEFOREEND);
 }
+const popupContainerComponent = new PopupContainerView();
+const infoPopupBottomComponent = new InfoPopupBottomView(films[0]);
+renderElement(siteFooter, popupContainerComponent.element, RenderPosition.AFTEREND);
+renderElement(popupContainerComponent.element.children[0], new InfoPopupTopView(films[0]).element, RenderPosition.BEFOREEND);
+renderElement(popupContainerComponent.element.children[0], infoPopupBottomComponent.element, RenderPosition.BEFOREEND);
 
-renderTemplate(siteFooter, createInfoPopupTemplate(films[0]), RenderPosition.AFTEREND);
-const filmDetailsContainer = document.querySelector('.film-details__table').children[0];
-renderElement(filmDetailsContainer, new DetailGenreView(films[0].genres).element, RenderPosition.BEFOREEND);
+// const filmDetailsContainer = document.querySelector('.film-details__table').children[0];
+// renderElement(filmDetailsContainer, new DetailGenreView(films[0].genres).element, RenderPosition.BEFOREEND);
 
 const comments = COMMENTS[films[0].comments];
 
-const filmCommentContainer = document.querySelector('.film-details__bottom-container');
-renderTemplate(filmCommentContainer, createFilmCommentContainer(comments.length), RenderPosition.BEFOREEND);
-
-const newFilmCommentContainer = document.querySelector('.film-details__comments-wrap');
-renderElement(newFilmCommentContainer, new NewCommentView().element, RenderPosition.BEFOREEND);
+const filmCommentComponent = new FilmCommentContainerView(comments.length);
+renderElement(infoPopupBottomComponent.element, filmCommentComponent.element, RenderPosition.BEFOREEND);
+renderElement(filmCommentComponent.element, new NewCommentView().element, RenderPosition.BEFOREEND);
 
 const commentList = document.querySelector('.film-details__comments-list');
 for (let j = 0; j < comments.length; j++) {
-  renderTemplate(commentList, createFilmComment(comments[j]), RenderPosition.BEFOREEND);
+  renderElement(commentList, new FilmCommentView(comments[j]).element, RenderPosition.BEFOREEND);
 }
 
 const showMoreButton = document.querySelector('.films-list__show-more');
