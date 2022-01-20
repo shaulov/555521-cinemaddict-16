@@ -1,6 +1,6 @@
 import {createElement} from '../render.js';
 
-const createInfoPopupTopTemplate = ({name, originalName, poster, rating, realiseDate, duration, description, director, writers, cast, country, ageRating}) => (
+const createInfoPopupTopTemplate = ({name, originalName, poster, rating, description, ageRating}) => (
   `<div class="film-details__top-container">
     <div class="film-details__close">
       <button class="film-details__close-btn" type="button">close</button>
@@ -23,33 +23,6 @@ const createInfoPopupTopTemplate = ({name, originalName, poster, rating, realise
             <p class="film-details__total-rating">${rating}</p>
           </div>
         </div>
-
-        <table class="film-details__table">
-          <tr class="film-details__row">
-            <td class="film-details__term">Director</td>
-            <td class="film-details__cell">${director}</td>
-          </tr>
-          <tr class="film-details__row">
-            <td class="film-details__term">Writers</td>
-            <td class="film-details__cell">${writers.join(', ')}</td>
-          </tr>
-          <tr class="film-details__row">
-            <td class="film-details__term">Actors</td>
-            <td class="film-details__cell">${cast.join(', ')}</td>
-          </tr>
-          <tr class="film-details__row">
-            <td class="film-details__term">Release Date</td>
-            <td class="film-details__cell">${realiseDate}</td>
-          </tr>
-          <tr class="film-details__row">
-            <td class="film-details__term">Runtime</td>
-            <td class="film-details__cell">${duration}</td>
-          </tr>
-          <tr class="film-details__row">
-            <td class="film-details__term">Country</td>
-            <td class="film-details__cell">${country}</td>
-          </tr>
-        </table>
 
         <p class="film-details__film-description">${description}</p>
       </div>

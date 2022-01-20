@@ -7,8 +7,9 @@ import ShowMoreButtonView from './view/show-more-button-view.js';
 import StatisticView from './view/statictic-view.js';
 import PopupContainerView from './view/popup-container-view.js';
 import InfoPopupTopView from './view/info-popup-top-view.js';
-import InfoPopupBottomView from './view/info-popup-bottom-view.js';
+import FilmDetailsTableView from './view/film-details-table-view.js';
 import DetailGenreView from './view/detail-genre-view.js';
+import InfoPopupBottomView from './view/info-popup-bottom-view.js';
 import FilmCommentContainerView from './view/comment-container-view.js';
 import FilmCommentView from './view/comment-view.js';
 import NewCommentView from './view/new-comment-view.js';
@@ -40,13 +41,17 @@ for (let i = 0; i < FILM_COUNT; i++) {
   renderElement(filmListContainer, new CardView(films[i]).element, RenderPosition.BEFOREEND);
 }
 const popupContainerComponent = new PopupContainerView();
+const infoPopupTopComponent = new InfoPopupTopView(films[0]);
 const infoPopupBottomComponent = new InfoPopupBottomView(films[0]);
+
 renderElement(siteFooter, popupContainerComponent.element, RenderPosition.AFTEREND);
-renderElement(popupContainerComponent.element.children[0], new InfoPopupTopView(films[0]).element, RenderPosition.BEFOREEND);
+renderElement(popupContainerComponent.element.children[0], infoPopupTopComponent.element, RenderPosition.BEFOREEND);
 renderElement(popupContainerComponent.element.children[0], infoPopupBottomComponent.element, RenderPosition.BEFOREEND);
 
-// const filmDetailsContainer = document.querySelector('.film-details__table').children[0];
-// renderElement(filmDetailsContainer, new DetailGenreView(films[0].genres).element, RenderPosition.BEFOREEND);
+const filmDetailsTableContainer = infoPopupTopComponent.element.querySelector('.film-details__film-description');
+const filmDetailsComponent = new FilmDetailsTableView(films[0]);
+renderElement(filmDetailsTableContainer, filmDetailsComponent.element, RenderPosition.BEFOREBEGIN);
+renderElement(filmDetailsComponent.element.children[0], new DetailGenreView(films[0].genres).element, RenderPosition.BEFOREEND);
 
 const comments = COMMENTS[films[0].comments];
 
