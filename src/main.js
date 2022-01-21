@@ -50,22 +50,22 @@ const renderFilm = (filmListElement, film) => {
     document.body.removeChild(filmPopupComponent.element);
   };
 
-  filmComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
-    openPopup();
-  });
-
-  infoPopupTopComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
-    closePopup();
-  });
-
   const onEscapeKeydown = (evt) => {
     if(isEscapeKey(evt)) {
       evt.preventDefault();
       closePopup();
+      document.removeEventListener('keydown', onEscapeKeydown);
     }
   };
 
-  document.addEventListener('keydown', onEscapeKeydown);
+  filmComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+    openPopup();
+    document.addEventListener('keydown', onEscapeKeydown);
+  });
+  infoPopupTopComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+    closePopup();
+    document.removeEventListener('keydown', onEscapeKeydown);
+  });
 
   render(filmListElement, filmComponent.element, RenderPosition.BEFOREEND);
   render(filmPopupComponent.element, infoPopupTopComponent.element, RenderPosition.BEFOREEND);
