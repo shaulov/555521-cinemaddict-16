@@ -5,7 +5,7 @@ export const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
-export const renderElement = (container, element, place) => {
+export const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.BEFOREBEGIN:
       container.before(element);
@@ -24,7 +24,6 @@ export const renderElement = (container, element, place) => {
 
 export const createElement = (template) => {
   const newElement = template.includes('<tr') && !template.includes('<table') ? document.createElement('tbody') : document.createElement('div');
-  // const newElement = document.createElement('div');
   newElement.innerHTML = template;
 
   return newElement.firstChild;
