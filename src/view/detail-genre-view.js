@@ -1,6 +1,6 @@
 import {createElement} from '../render.js';
 
-const createDetailGenre = (genres) => {
+const createDetailGenre = ({genres}) => {
   const fragment = document.createElement('div');
   genres.forEach((genre) => {
     fragment.append(`<span class="film-details__genre">${genre}</span>`);
