@@ -14,6 +14,7 @@ import FilmCommentContainerView from './view/comment-container-view.js';
 import FilmCommentView from './view/comment-view.js';
 import NewCommentView from './view/new-comment-view.js';
 import {render, RenderPosition} from './render.js';
+import {isEscapeKey} from './ustil.js';
 import {generateFilm, COMMENTS} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
 
@@ -56,6 +57,15 @@ const renderFilm = (filmListElement, film) => {
   infoPopupTopComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
     closePopup();
   });
+
+  const onEscapeKeydown = (evt) => {
+    if(isEscapeKey(evt)) {
+      evt.preventDefault();
+      closePopup();
+    }
+  };
+
+  document.addEventListener('keydown', onEscapeKeydown);
 
   render(filmListElement, filmComponent.element, RenderPosition.BEFOREEND);
   render(filmPopupComponent.element, infoPopupTopComponent.element, RenderPosition.BEFOREEND);
