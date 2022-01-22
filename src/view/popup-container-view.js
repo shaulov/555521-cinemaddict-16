@@ -1,10 +1,13 @@
 import {createElement} from '../render.js';
 
-const createShowMoreButtonTemplate = () => (
-  `<button class="films-list__show-more">Show more</button>
-`);
+const createPopupContainerTemplate = () => (
+  `<section class="film-details">
+    <form class="film-details__inner" action="" method="get">
+    </form>
+  </section>`
+);
 
-export default class ShowMoreButtonView {
+export default class PopupContainerView {
   #element = null;
 
   get element() {
@@ -16,7 +19,7 @@ export default class ShowMoreButtonView {
   }
 
   get template() {
-    return createShowMoreButtonTemplate();
+    return createPopupContainerTemplate();
   }
 
   removeElement() {
