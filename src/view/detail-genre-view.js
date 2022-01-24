@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createDetailGenre = ({genres}) => {
   const fragment = document.createElement('div');
@@ -16,27 +16,15 @@ const createDetailGenre = ({genres}) => {
   );
 };
 
-export default class DetailGenreView {
-  #element = null;
+export default class DetailGenreView extends AbstractView{
   #genres = null;
 
   constructor (genres) {
+    super();
     this.#genres = genres;
-  }
-
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createDetailGenre(this.#genres);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
