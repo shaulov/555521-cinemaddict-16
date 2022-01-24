@@ -47,4 +47,14 @@ export default class InfoPopupTopView extends AbstractView{
   get template() {
     return createInfoPopupTopTemplate(this.#popupInfo);
   }
+
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  }
 }

@@ -58,11 +58,11 @@ const renderFilm = (filmListElement, film) => {
     }
   };
 
-  filmComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+  filmComponent.setClickHandler(() => {
     openPopup();
     document.addEventListener('keydown', onEscapeKeydown);
   });
-  infoPopupTopComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+  infoPopupTopComponent.setClickHandler(() => {
     closePopup();
     document.removeEventListener('keydown', onEscapeKeydown);
   });
@@ -99,8 +99,7 @@ if (films.length > FILM_COUNT_PER_STEP) {
   const showMoreButtonComponent = new ShowMoreButtonView();
   render(filmListContainer, showMoreButtonComponent.element, RenderPosition.AFTEREND);
 
-  showMoreButtonComponent.element.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  showMoreButtonComponent.setClickHandler(() => {
     films
       .slice(renderFilmCount, renderFilmCount + FILM_COUNT_PER_STEP)
       .forEach((film) => renderFilm(filmListContainer, film));
