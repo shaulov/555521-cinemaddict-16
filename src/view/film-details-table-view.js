@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createFilmDetailsTableTemplate = ({realiseDate, duration, director, writers, cast, country}) => (
   `<table class="film-details__table">
@@ -31,27 +31,15 @@ const createFilmDetailsTableTemplate = ({realiseDate, duration, director, writer
   </table>`
 );
 
-export default class FilmDetailsTableView {
-  #element = null;
+export default class FilmDetailsTableView extends AbstractView{
   #filmDetails = null;
 
   constructor(filmDetails) {
+    super();
     this.#filmDetails = filmDetails;
-  }
-
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFilmDetailsTableTemplate(this.#filmDetails);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

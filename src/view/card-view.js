@@ -1,5 +1,5 @@
 import {COMMENTS} from '../mock/film.js';
-import {createElement} from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createCardTemplate = ({name, poster, rating, realiseDate, duration, description, genres, comments}) => {
   const visibleDescription = description.length > 140 ? `${description.slice(0, 139)}...` : description;
@@ -27,27 +27,25 @@ const createCardTemplate = ({name, poster, rating, realiseDate, duration, descri
   );
 };
 
-export default class CardView {
-  #element = null;
+export default class CardView extends AbstractView{
   #filmInfo = null;
 
   constructor(filmInfo) {
+    super();
     this.#filmInfo = filmInfo;
-  }
-
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createCardTemplate(this.#filmInfo);
   }
 
-  removeElement() {
-    this.#element = null;
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
   }
 }
