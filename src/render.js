@@ -32,3 +32,8 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
+
+export const removeElement = (element) => {
+  const deletedElement = element instanceof AbstractView ? element.element : element;
+  deletedElement.remove();
+};
