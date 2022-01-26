@@ -23,7 +23,7 @@ import FilmCommentContainerView from './view/comment-container-view.js';
 import CommentListView from './view/comment-list-view.js';
 import FilmCommentView from './view/comment-view.js';
 import NewCommentView from './view/new-comment-view.js';
-import {render, RenderPosition, removeElement} from './render.js';
+import {render, RenderPosition, remove} from './render.js';
 import {openPopup, closePopup} from './popup.js';
 import {isEscapeKey} from './ustil.js';
 import {generateFilm, COMMENTS} from './mock/film.js';
@@ -124,7 +124,7 @@ if (films.length > FILM_COUNT_PER_STEP) {
     renderFilmCount += FILM_COUNT_PER_STEP;
 
     if(renderFilmCount >= films.length) {
-      removeElement(showMoreButtonComponent);
+      remove(showMoreButtonComponent);
       showMoreButtonComponent.removeElement();
     }
   });
