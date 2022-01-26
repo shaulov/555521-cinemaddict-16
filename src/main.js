@@ -1,7 +1,10 @@
 import UserRateView from './view/user-rate-view.js';
 import SiteMenuView from './view/site-menu-view.js';
 import SortView from './view/sort-view.js';
-import ContentContainerView from './view/content-container-view.js';
+import FilmsContainerView from './view/films-container-view.js';
+import FilmsListView from './view/films-list-view.js';
+import FilmsListTitleView from './view/films-list-title-view.js';
+import FilmsListContainerView from './view/films-list-container-view.js';
 import CardView from './view/card-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import StatisticView from './view/statictic-view.js';
@@ -31,12 +34,17 @@ const FILM_COUNT_PER_STEP = 5;
 const films = Array.from({length: 15}, generateFilm);
 const filters = generateFilter(films);
 
+const filmsContainerComponent = new FilmsContainerView();
+const filmsListComponent = new FilmsListView();
+const filmListContainerComponent = new FilmsListContainerView();
+
 const siteMain = document.querySelector('.main');
 render(siteMain, new SiteMenuView(filters), RenderPosition.BEFOREEND);
 render(siteMain, new SortView(), RenderPosition.BEFOREEND);
-render(siteMain, new ContentContainerView(), RenderPosition.BEFOREEND);
-
-const filmListContainer = siteMain.querySelector('.films-list__container');
+render(siteMain, filmsContainerComponent, RenderPosition.BEFOREEND);
+render(filmsContainerComponent, filmsListComponent, RenderPosition.BEFOREEND);
+render(filmsListComponent, new FilmsListTitleView(), RenderPosition.BEFOREEND);
+render(filmsListComponent, filmListContainerComponent, RenderPosition.BEFOREEND);
 
 const renderFilm = (filmListElement, film) => {
   const filmComponent = new CardView(film);
@@ -99,19 +107,19 @@ const footerStatistic = siteFooter.querySelector('.footer__statistics');
 render(footerStatistic, new StatisticView(), RenderPosition.BEFOREEND);
 
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  renderFilm(filmListContainer, films[i]);
+  renderFilm(filmListContainerComponent, films[i]);
 }
 
 if (films.length > FILM_COUNT_PER_STEP) {
   let renderFilmCount = FILM_COUNT_PER_STEP;
 
   const showMoreButtonComponent = new ShowMoreButtonView();
-  render(filmListContainer, showMoreButtonComponent, RenderPosition.AFTEREND);
+  render(filmListContainerComponent, showMoreButtonComponent, RenderPosition.AFTEREND);
 
   showMoreButtonComponent.setClickHandler(() => {
     films
       .slice(renderFilmCount, renderFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => renderFilm(filmListContainer, film));
+      .forEach((film) => renderFilm(filmListContainerComponent, film));
 
     renderFilmCount += FILM_COUNT_PER_STEP;
 
