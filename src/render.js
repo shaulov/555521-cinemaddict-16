@@ -34,6 +34,14 @@ export const createElement = (template) => {
 };
 
 export const remove = (element) => {
-  const deletedElement = element instanceof AbstractView ? element.element : element;
-  deletedElement.remove();
+  if (element === null) {
+    return;
+  }
+
+  if (!(element instanceof AbstractView)) {
+    throw new Error('Can remove only components');
+  }
+
+  element.element.remove();
+  element.removeElement();
 };
