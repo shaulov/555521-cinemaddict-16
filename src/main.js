@@ -23,6 +23,6 @@ const siteFooter = document.querySelector('.footer');
 const footerStatistic = siteFooter.querySelector('.footer__statistics');
 render(footerStatistic, new StatisticView(), RenderPosition.BEFOREEND);
 
-const filmPresenter = new FilmListPresenter(siteMain);
+const filmListPresenter = new FilmListPresenter(siteMain);
 
-filmPresenter.init(films);
+filmListPresenter.init(films);
