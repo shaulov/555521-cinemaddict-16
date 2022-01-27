@@ -51,7 +51,6 @@ export default class FilmListPresenter {
 
     if(this.#renderedFilmCount >= this.#listFilms.length) {
       remove(this.#showMoreButtonComponent);
-      this.#showMoreButtonComponent.removeElement();
     }
   }
 

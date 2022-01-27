@@ -45,8 +45,8 @@ export default class FilmPresenter {
 
   init = (film) => {
     this.#film = film;
-    this.#filmComponent = new CardView(this.#film);
 
+    this.#filmComponent = new CardView(this.#film);
     this.#filmComponent.setClickHandler(this.#handleCardClick);
 
     render(this.#filmContainer, this.#filmComponent, RenderPosition.BEFOREEND);
