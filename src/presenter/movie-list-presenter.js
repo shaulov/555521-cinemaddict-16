@@ -1,7 +1,7 @@
 import FilmsContainerView from '../view/films-container-view.js';
 import FilmsListView from '../view/films-list-view.js';
-import FilmsListTitleView from './view/films-list-title-view.js';
-import FilmsListContainerView from './view/films-list-container-view.js';
+import FilmsListTitleView from '../view/films-list-title-view.js';
+import FilmsListContainerView from '../view/films-list-container-view.js';
 import CardView from '../view/card-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import PopupContainerView from '../view/popup-container-view.js';
@@ -32,6 +32,7 @@ export default class FilmListPresenter {
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
   #filmListContainerComponent = new FilmsListContainerView();
+  #filmPopupComponent = new PopupContainerView();
 
   #listFilms = [];
 
@@ -54,14 +55,15 @@ export default class FilmListPresenter {
     const filmComponent = new CardView(film);
 
     filmComponent.setClickHandler(() => {
-      openPopup(this.#renderFilmPopup(film));
+      this.#renderFilmPopup(film);
+      openPopup(this.#filmPopupComponent);
     });
 
     render(this.#filmListContainerComponent, filmComponent, RenderPosition.BEFOREEND);
   }
 
   #renderFilmPopup = (film) => {
-    const filmPopupComponent = new PopupContainerView();
+    this.#filmPopupComponent.removeElement();
     const infoPopupTopComponent = new InfoPopupTopView(film);
     const filmDetailsCloseComponent = new FilmDetailsCloseView();
     const filmDetailsWrapComponent = new FilmDetailsWrapView();
@@ -76,19 +78,19 @@ export default class FilmListPresenter {
     const onEscapeKeydown = (evt) => {
       if(isEscapeKey(evt)) {
         evt.preventDefault();
-        closePopup(filmPopupComponent);
+        closePopup(this.#filmPopupComponent);
         document.removeEventListener('keydown', onEscapeKeydown);
       }
     };
 
     filmDetailsCloseComponent.setClickHandler(() => {
-      closePopup(filmPopupComponent);
+      closePopup(this.#filmPopupComponent);
       document.removeEventListener('keydown', onEscapeKeydown);
     });
 
     document.addEventListener('keydown', onEscapeKeydown);
 
-    render(filmPopupComponent, infoPopupTopComponent, RenderPosition.BEFOREEND);
+    render(this.#filmPopupComponent, infoPopupTopComponent, RenderPosition.BEFOREEND);
     render(infoPopupTopComponent, filmDetailsCloseComponent, RenderPosition.AFTERBEGIN);
     render(infoPopupTopComponent, filmDetailsWrapComponent, RenderPosition.BEFOREEND);
     render(filmDetailsWrapComponent, new FilmDetailsPosterView(film), RenderPosition.BEFOREEND);
@@ -97,7 +99,7 @@ export default class FilmListPresenter {
     render(filmDetailsInfoComponent, new FilmDetailsDescriptionView(film), RenderPosition.BEFOREEND);
     render(infoPopupTopComponent, new FilmDetailsControlView(), RenderPosition.BEFOREEND);
     render(filmsDetailsTableComponent, new DetailGenreView(film), RenderPosition.BEFOREEND);
-    render(filmPopupComponent, filmPopupBottomComponent, RenderPosition.BEFOREEND);
+    render(this.#filmPopupComponent, filmPopupBottomComponent, RenderPosition.BEFOREEND);
     render(filmPopupBottomComponent, filmCommentContainerComponent, RenderPosition.BEFOREEND);
     render(filmCommentContainerComponent, commentListComponent, RenderPosition.BEFOREEND);
 
