@@ -5,7 +5,7 @@ import StatisticView from './view/statictic-view.js';
 import {render, RenderPosition} from './render.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
-import FilmListPresenter from './presenter/movie-list-presenter.js';
+import FilmListPresenter from './presenter/film-list-presenter.js';
 
 const FILM_COUNT = 15;
 
