@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import {getRandomInteger} from '../ustil.js';
 
 const filmsName = [
@@ -179,6 +180,7 @@ export const COMMENTS = {
 };
 
 export const generateFilm = () => ({
+  id: nanoid(),
   name: getArrayElement(filmsName),
   originalName: getArrayElement(filmsName),
   poster: getArrayElement(posters),
@@ -193,7 +195,7 @@ export const generateFilm = () => ({
   genres: ['Thriller', 'Drama', 'Melodrama'],
   description: generateDescription(),
   ageRating: getArrayElement(ageRatings),
-  isWatchlist: getRandomInteger(0, 1),
-  isHistory: getRandomInteger(0, 1),
-  isFavorite: getRandomInteger(0, 1),
+  isWatchlist: Boolean(getRandomInteger(0, 1)),
+  isHistory: Boolean(getRandomInteger(0, 1)),
+  isFavorite: Boolean(getRandomInteger(0, 1)),
 });
