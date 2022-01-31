@@ -31,7 +31,8 @@ export default class FilmPresenter {
   #filmDetailsCloseComponent = null;
   #filmDetailsWrapComponent = null;
   #filmDetailsInfoComponent = null;
-  #filmsDetailsTableComponent =  null;
+  #filmDetailsTableComponent =  null;
+  #filmDetailsControlComponent = null;
   #filmPopupBottomComponent = null;
   #filmCommentContainerComponent = null;
   #commentListComponent = null;
@@ -81,7 +82,8 @@ export default class FilmPresenter {
     this.#filmDetailsCloseComponent = new FilmDetailsCloseView();
     this.#filmDetailsWrapComponent = new FilmDetailsWrapView();
     this.#filmDetailsInfoComponent = new FilmDetailsInfoView(this.#film);
-    this.#filmsDetailsTableComponent = new FilmDetailsTableView(this.#film);
+    this.#filmDetailsTableComponent = new FilmDetailsTableView(this.#film);
+    this.#filmDetailsControlComponent = new FilmDetailsControlView(this.#film);
     this.#filmPopupBottomComponent = new InfoPopupBottomView();
     this.#filmCommentContainerComponent = new FilmCommentContainerView(COMMENTS[this.#film.comments].length);
     this.#commentListComponent = new CommentListView();
@@ -89,16 +91,20 @@ export default class FilmPresenter {
     this.#filmComments = COMMENTS[this.#film.comments];
 
     this.#filmDetailsCloseComponent.setClickHandler(this.#closePopupHandle);
+    this.#filmDetailsControlComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistClick);
+    this.#filmDetailsControlComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchClick);
+    this.#filmDetailsControlComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoriteClick);
+    this.#filmDetailsControlComponent.setUpdatePopupView(this.#handleChangePopupView);
 
     render(this.#filmPopupComponent, this.#infoPopupTopComponent, RenderPosition.BEFOREEND);
     render(this.#infoPopupTopComponent, this.#filmDetailsCloseComponent, RenderPosition.AFTERBEGIN);
     render(this.#infoPopupTopComponent, this.#filmDetailsWrapComponent, RenderPosition.BEFOREEND);
     render(this.#filmDetailsWrapComponent, new FilmDetailsPosterView(this.#film), RenderPosition.BEFOREEND);
     render(this.#filmDetailsWrapComponent, this.#filmDetailsInfoComponent, RenderPosition.BEFOREEND);
-    render(this.#filmDetailsInfoComponent, this.#filmsDetailsTableComponent, RenderPosition.BEFOREEND);
+    render(this.#filmDetailsInfoComponent, this.#filmDetailsTableComponent, RenderPosition.BEFOREEND);
+    render(this.#infoPopupTopComponent, this.#filmDetailsControlComponent, RenderPosition.BEFOREEND);
     render(this.#filmDetailsInfoComponent, new FilmDetailsDescriptionView(this.#film), RenderPosition.BEFOREEND);
-    render(this.#infoPopupTopComponent, new FilmDetailsControlView(this.#film), RenderPosition.BEFOREEND);
-    render(this.#filmsDetailsTableComponent, new DetailGenreView(this.#film), RenderPosition.BEFOREEND);
+    render(this.#filmDetailsTableComponent, new DetailGenreView(this.#film), RenderPosition.BEFOREEND);
     render(this.#filmPopupComponent, this.#filmPopupBottomComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupBottomComponent, this.#filmCommentContainerComponent, RenderPosition.BEFOREEND);
     render(this.#filmCommentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
@@ -116,7 +122,6 @@ export default class FilmPresenter {
   }
 
   #openPopup = () => {
-    // this.#changePopupView();
     openPopup(this.#filmPopupComponent);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
@@ -154,5 +159,10 @@ export default class FilmPresenter {
 
   #handleAddToFavoriteClick = () => {
     this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+  }
+
+  #handleChangePopupView = () => {
+    console.log('suka menyaysya');
+    render(this.#infoPopupTopComponent, this.#filmDetailsControlComponent, RenderPosition.BEFOREEND);
   }
 }

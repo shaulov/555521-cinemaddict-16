@@ -19,4 +19,44 @@ export default class FilmDetailsControlView extends AbstractView{
   get template() {
     return createFilmDetailsControlTemplate(this.#controlButtonStatus);
   }
+
+  setUpdatePopupView = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#updatePopupViewHandle);
+  }
+
+  setAddToWatchlistClickHandler = (callback) => {
+    this._callback.addToWatchlistClick = callback;
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#addToWatchlistClickHandler);
+  }
+
+  setAlreadyWatchClickHandler = (callback) => {
+    this._callback.alreadyWatchClick = callback;
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#alreadyWatchClickHandler);
+  }
+
+  setAddToFavoriteClickHandler = (callback) => {
+    this._callback.addToFavoriteClick = callback;
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#addToFavoriteClickHandler);
+  }
+
+  #updatePopupViewHandle = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  #addToWatchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.addToWatchlistClick();
+  }
+
+  #alreadyWatchClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.alreadyWatchClick();
+  }
+
+  #addToFavoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.addToFavoriteClick();
+  }
 }
