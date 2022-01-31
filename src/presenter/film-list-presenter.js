@@ -3,6 +3,7 @@ import FilmsListView from '../view/films-list-view.js';
 import FilmsListTitleView from '../view/films-list-title-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
+import {updateItem} from '../ustil.js';
 import {render, RenderPosition, remove} from '../render.js';
 import FilmPresenter from './film-presenter.js';
 
@@ -18,6 +19,7 @@ export default class FilmListPresenter {
 
   #listFilms = [];
   #renderedFilmCount = FILM_COUNT_PER_STEP;
+  #filmPresenter = new Map();
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -34,9 +36,19 @@ export default class FilmListPresenter {
     this.#renderFilmsContainer();
   }
 
+  #handleFilmChange = (updatedFilm) => {
+    this.#listFilms = updateItem(this.#listFilms, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  }
+
+  #handlePopupOpen = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.resetView());
+  }
+
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent);
+    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange, this.#handlePopupOpen);
     filmPresenter.init(film);
+    this.#filmPresenter.set(film.id, filmPresenter);
   }
 
   #renderFilms = (from, to) => {
@@ -58,6 +70,13 @@ export default class FilmListPresenter {
     render(this.#filmListContainerComponent, this.#showMoreButtonComponent, RenderPosition.AFTEREND);
 
     this.#showMoreButtonComponent.setClickHandler(this.#handleLoadMoreButtonClick);
+  }
+
+  #clearFilmList = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmCount = FILM_COUNT_PER_STEP;
+    remove(this.#showMoreButtonComponent);
   }
 
   #renderFilmList = () => {

@@ -17,10 +17,12 @@ import NewCommentView from '../view/new-comment-view.js';
 import {openPopup, closePopup} from '../popup.js';
 import {isEscapeKey} from '../ustil.js';
 import {COMMENTS} from '../mock/film.js';
-import {render, RenderPosition} from '../render.js';
+import {remove, replace, render, RenderPosition} from '../render.js';
 
 export default class FilmPresenter {
   #filmContainer = null;
+  #changeData = null;
+  #changePopupView = null;
 
   #filmComponent = null;
 
@@ -39,17 +41,38 @@ export default class FilmPresenter {
 
   #film = null;
 
-  constructor(filmContainer) {
+  constructor(filmContainer, changeData, changePopupView) {
     this.#filmContainer = filmContainer;
+    this.#changeData = changeData;
+    this.#changePopupView = changePopupView;
   }
 
   init = (film) => {
     this.#film = film;
 
+    const prevFilmComponent = this.#filmComponent;
+
     this.#filmComponent = new CardView(this.#film);
     this.#filmComponent.setClickHandler(this.#handleCardClick);
+    this.#filmComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistClick);
+    this.#filmComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchClick);
+    this.#filmComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoriteClick);
 
-    render(this.#filmContainer, this.#filmComponent, RenderPosition.BEFOREEND);
+    if (prevFilmComponent === null) {
+      render(this.#filmContainer, this.#filmComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if(this.#filmContainer.element.contains(prevFilmComponent.element)) {
+      replace(this.#filmComponent, prevFilmComponent);
+    }
+
+    remove(prevFilmComponent);
+  }
+
+  destroy = () => {
+    remove(this.#filmComponent);
+    remove(this,this.#filmPopupComponent);
   }
 
   #renderFilmPopup = () => {
@@ -74,7 +97,7 @@ export default class FilmPresenter {
     render(this.#filmDetailsWrapComponent, this.#filmDetailsInfoComponent, RenderPosition.BEFOREEND);
     render(this.#filmDetailsInfoComponent, this.#filmsDetailsTableComponent, RenderPosition.BEFOREEND);
     render(this.#filmDetailsInfoComponent, new FilmDetailsDescriptionView(this.#film), RenderPosition.BEFOREEND);
-    render(this.#infoPopupTopComponent, new FilmDetailsControlView(), RenderPosition.BEFOREEND);
+    render(this.#infoPopupTopComponent, new FilmDetailsControlView(this.#film), RenderPosition.BEFOREEND);
     render(this.#filmsDetailsTableComponent, new DetailGenreView(this.#film), RenderPosition.BEFOREEND);
     render(this.#filmPopupComponent, this.#filmPopupBottomComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupBottomComponent, this.#filmCommentContainerComponent, RenderPosition.BEFOREEND);
@@ -88,7 +111,12 @@ export default class FilmPresenter {
     render(this.#filmCommentContainerComponent, this.#newCommentComponent, RenderPosition.BEFOREEND);
   }
 
+  resetView = () => {
+    this.#closePopup();
+  }
+
   #openPopup = () => {
+    // this.#changePopupView();
     openPopup(this.#filmPopupComponent);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
@@ -96,6 +124,7 @@ export default class FilmPresenter {
   #closePopup = () => {
     closePopup(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
+
   }
 
   #escapeKeydownHandler = (evt) => {
@@ -113,5 +142,17 @@ export default class FilmPresenter {
   #handleCardClick = () => {
     this.#renderFilmPopup();
     this.#openPopup();
+  }
+
+  #handleAddToWatchlistClick = () => {
+    this.#changeData({...this.#film, isWatchlist: !this.#film.isWatchlist});
+  }
+
+  #handleAlreadyWatchClick = () => {
+    this.#changeData({...this.#film, isHistory: !this.#film.isHistory});
+  }
+
+  #handleAddToFavoriteClick = () => {
+    this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
   }
 }
