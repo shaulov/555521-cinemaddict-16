@@ -41,12 +41,12 @@ export default class FilmListPresenter {
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   }
 
-  #handlePopupOpen = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.resetView());
-  }
+  // #handlePopupOpen = () => {
+  //   this.#filmPresenter.forEach((presenter) => presenter.resetView());
+  // }
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange, this.#handlePopupOpen);
+    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   }
