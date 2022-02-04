@@ -1,14 +1,6 @@
 import PopupContainerView from '../view/popup-container-view.js';
-import InfoPopupTopView from '../view/info-popup-top-view.js';
-import FilmDetailsCloseView from '../view/film-details-close-view.js';
-import FilmDetailsWrapView from '../view/film-details-wrap-view.js';
-import FilmDetailsPosterView from '../view/film-details-poster-view.js';
-import FilmDetailsInfoView from '../view/film-details-info-view.js';
-import FilmDetailsDescriptionView from '../view/film-details-description-view.js';
-import FilmDetailsControlView from '../view/film-details-control-view.js';
-import FilmDetailsTableView from '../view/film-details-table-view.js';
-import DetailGenreView from '../view/detail-genre-view.js';
-import InfoPopupBottomView from '../view/info-popup-bottom-view.js';
+import PopupTopView from '../view/popup-top-view.js';
+import InfoPopupBottomView from '../view/popup-bottom-view.js';
 import FilmCommentContainerView from '../view/comment-container-view.js';
 import CommentListView from '../view/comment-list-view.js';
 import FilmCommentView from '../view/comment-view.js';
@@ -16,26 +8,20 @@ import NewCommentView from '../view/new-comment-view.js';
 import {openPopup, closePopup} from '../popup.js';
 import {isEscapeKey} from '../ustil.js';
 import {COMMENTS} from '../mock/film.js';
-import {remove, render, RenderPosition} from '../render.js';
+import {remove, render, replace, RenderPosition} from '../render.js';
 
 export default class PopupPresenter {
+  #film = null;
   #changePopupData = null;
 
   #filmPopupComponent = null;
-  #infoPopupTopComponent = null;
-  #filmDetailsCloseComponent = null;
-  #filmDetailsWrapComponent = null;
-  #filmDetailsInfoComponent = null;
-  #filmDetailsTableComponent =  null;
-  #filmDetailsControlComponent = null;
+  #popupTopComponent = null;
   #filmPopupBottomComponent = null;
   #filmCommentContainerComponent = null;
   #commentListComponent = null;
   #filmCommentComponent = null;
   #newCommentComponent = null;
   #filmComments = null;
-
-  #film = null;
 
   constructor(changePopupData) {
     this.#changePopupData = changePopupData;
@@ -44,34 +30,23 @@ export default class PopupPresenter {
   init = (film) => {
     this.#film = film;
 
+    const prevPopupTopComponent = this.#popupTopComponent;
+
     this.#filmPopupComponent = new PopupContainerView();
-    this.#infoPopupTopComponent = new InfoPopupTopView(this.#film);
-    this.#filmDetailsCloseComponent = new FilmDetailsCloseView();
-    this.#filmDetailsWrapComponent = new FilmDetailsWrapView();
-    this.#filmDetailsInfoComponent = new FilmDetailsInfoView(this.#film);
-    this.#filmDetailsTableComponent = new FilmDetailsTableView(this.#film);
-    this.#filmDetailsControlComponent = new FilmDetailsControlView(this.#film);
+    this.#popupTopComponent = new PopupTopView(this.#film);
     this.#filmPopupBottomComponent = new InfoPopupBottomView();
     this.#filmCommentContainerComponent = new FilmCommentContainerView(COMMENTS[this.#film.comments].length);
     this.#commentListComponent = new CommentListView();
     this.#newCommentComponent = new NewCommentView();
     this.#filmComments = COMMENTS[this.#film.comments];
 
-    this.#filmDetailsCloseComponent.setClickHandler(this.#closePopupHandle);
-    this.#filmDetailsControlComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistClick);
-    this.#filmDetailsControlComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchClick);
-    this.#filmDetailsControlComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoriteClick);
-    this.#filmDetailsControlComponent.setUpdatePopupView(this.#handleChangePopupView);
+    this.#popupTopComponent.setCloseClickHandler(this.#closePopupHandle);
+    this.#popupTopComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistPopupClick);
+    this.#popupTopComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchPopupClick);
+    this.#popupTopComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoritePopupClick);
+    this.#popupTopComponent.setUpdatePopupView(this.#handleChangePopupView);
 
-    render(this.#filmPopupComponent, this.#infoPopupTopComponent, RenderPosition.BEFOREEND);
-    render(this.#infoPopupTopComponent, this.#filmDetailsCloseComponent, RenderPosition.AFTERBEGIN);
-    render(this.#infoPopupTopComponent, this.#filmDetailsWrapComponent, RenderPosition.BEFOREEND);
-    render(this.#filmDetailsWrapComponent, new FilmDetailsPosterView(this.#film), RenderPosition.BEFOREEND);
-    render(this.#filmDetailsWrapComponent, this.#filmDetailsInfoComponent, RenderPosition.BEFOREEND);
-    render(this.#filmDetailsInfoComponent, this.#filmDetailsTableComponent, RenderPosition.BEFOREEND);
-    render(this.#infoPopupTopComponent, this.#filmDetailsControlComponent, RenderPosition.BEFOREEND);
-    render(this.#filmDetailsInfoComponent, new FilmDetailsDescriptionView(this.#film), RenderPosition.BEFOREEND);
-    render(this.#filmDetailsTableComponent, new DetailGenreView(this.#film), RenderPosition.BEFOREEND);
+    render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupComponent, this.#filmPopupBottomComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupBottomComponent, this.#filmCommentContainerComponent, RenderPosition.BEFOREEND);
     render(this.#filmCommentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
@@ -83,7 +58,16 @@ export default class PopupPresenter {
 
     render(this.#filmCommentContainerComponent, this.#newCommentComponent, RenderPosition.BEFOREEND);
 
-    this.#openPopup();
+    if (prevPopupTopComponent === null) {
+      render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.AFTERBEGIN);
+      return;
+    }
+
+    if(this.#filmPopupComponent.element.contains(prevPopupTopComponent.element)) {
+      replace(this.#popupTopComponent, prevPopupTopComponent);
+    }
+
+    remove(prevPopupTopComponent);
   }
 
   destroy = () => {
@@ -94,7 +78,7 @@ export default class PopupPresenter {
     this.#closePopup();
   }
 
-  #openPopup = () => {
+  openPopup = () => {
     openPopup(this.#filmPopupComponent);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
@@ -118,18 +102,18 @@ export default class PopupPresenter {
   }
 
   #handleChangePopupView = () => {
-    render(this.#infoPopupTopComponent, this.#filmDetailsControlComponent, RenderPosition.BEFOREEND);
+
   }
 
-  #handleAddToWatchlistClick = () => {
+  #handleAddToWatchlistPopupClick = () => {
     this.#changePopupData({...this.#film, isWatchlist: !this.#film.isWatchlist});
   }
 
-  #handleAlreadyWatchClick = () => {
+  #handleAlreadyWatchPopupClick = () => {
     this.#changePopupData({...this.#film, isHistory: !this.#film.isHistory});
   }
 
-  #handleAddToFavoriteClick = () => {
+  #handleAddToFavoritePopupClick = () => {
     this.#changePopupData({...this.#film, isFavorite: !this.#film.isFavorite});
   }
 }

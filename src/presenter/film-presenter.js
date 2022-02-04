@@ -47,6 +47,7 @@ export default class FilmPresenter {
   #handleCardClick = () => {
     const popupPresenter = new PopupPresenter(this.#changeData);
     popupPresenter.init(this.#film);
+    popupPresenter.openPopup();
   }
 
   #handleAddToWatchlistClick = () => {
