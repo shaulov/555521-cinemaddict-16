@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view.js';
 
-const createPopupTopTemplate = ({name, originalName, poster, ageRating, rating, director, writers, cast, realiseDate, duration, country, genres, description}) => {
+const createPopupTopTemplate = ({name, originalName, poster, ageRating, rating, director, writers, cast, realiseDate, duration, country, genres, description, isWatchlist, isHistory, isFavorite}) => {
   const fragment = document.createElement('div');
   genres.forEach((genre) => {
     fragment.append(`<span class="film-details__genre">${genre}</span>`);
@@ -68,9 +68,9 @@ const createPopupTopTemplate = ({name, originalName, poster, ageRating, rating, 
       </div>
 
       <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+        <button type="button" class="film-details__control-button ${isWatchlist ? 'film-details__control-button--active' : ''} film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button ${isHistory ? 'film-details__control-button--active' : ''} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button ${isFavorite ? 'film-details__control-button--active' : ''} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>`
   );
@@ -98,11 +98,6 @@ export default class InfoPopupBottomView extends AbstractView {
     this._callback.closeClick();
   }
 
-  setUpdatePopupView = (callback) => {
-    this._callback.click = callback;
-    this.element.addEventListener('click', this.#updatePopupViewHandle);
-  }
-
   setAddToWatchlistClickHandler = (callback) => {
     this._callback.addToWatchlistClick = callback;
     this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#addToWatchlistClickHandler);
@@ -116,11 +111,6 @@ export default class InfoPopupBottomView extends AbstractView {
   setAddToFavoriteClickHandler = (callback) => {
     this._callback.addToFavoriteClick = callback;
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#addToFavoriteClickHandler);
-  }
-
-  #updatePopupViewHandle = (evt) => {
-    evt.preventDefault();
-    this._callback.click();
   }
 
   #addToWatchlistClickHandler = (evt) => {

@@ -6,6 +6,8 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import {updateItem} from '../ustil.js';
 import {render, RenderPosition, remove} from '../render.js';
 import FilmPresenter from './film-presenter.js';
+import PopupPresenter from '../presenter/popup-presenter.js';
+
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -41,14 +43,16 @@ export default class FilmListPresenter {
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   }
 
-  // #handlePopupOpen = () => {
-  //   this.#filmPresenter.forEach((presenter) => presenter.resetView());
-  // }
-
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange);
+    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange, this.#renderPopup);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
+  }
+
+  #renderPopup = (film) => {
+    const popupPresenter = new PopupPresenter(this.#handleFilmChange);
+    popupPresenter.init(film);
+    popupPresenter.open();
   }
 
   #renderFilms = (from, to) => {

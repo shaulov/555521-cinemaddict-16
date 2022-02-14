@@ -44,9 +44,7 @@ export default class PopupPresenter {
     this.#popupTopComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistPopupClick);
     this.#popupTopComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchPopupClick);
     this.#popupTopComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoritePopupClick);
-    this.#popupTopComponent.setUpdatePopupView(this.#handleChangePopupView);
 
-    render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupComponent, this.#filmPopupBottomComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupBottomComponent, this.#filmCommentContainerComponent, RenderPosition.BEFOREEND);
     render(this.#filmCommentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
@@ -71,7 +69,13 @@ export default class PopupPresenter {
   }
 
   destroy = () => {
-    remove(this,this.#filmPopupComponent);
+    remove(this.#filmPopupComponent);
+    remove(this.#popupTopComponent);
+    remove(this.#filmPopupBottomComponent);
+    remove(this.#filmCommentContainerComponent);
+    remove(this.#commentListComponent);
+    remove(this.#filmCommentComponent);
+    remove(this.#newCommentComponent);
   }
 
   resetView = () => {
@@ -99,10 +103,6 @@ export default class PopupPresenter {
   #closePopupHandle = () => {
     this.#close();
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
-  }
-
-  #handleChangePopupView = () => {
-
   }
 
   #handleAddToWatchlistPopupClick = () => {
