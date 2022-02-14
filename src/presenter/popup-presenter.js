@@ -12,7 +12,7 @@ import {remove, render, replace, RenderPosition} from '../render.js';
 
 export default class PopupPresenter {
   #film = null;
-  #changePopupData = null;
+  #changeData = null;
 
   #filmPopupComponent = null;
   #popupTopComponent = null;
@@ -23,8 +23,8 @@ export default class PopupPresenter {
   #newCommentComponent = null;
   #filmComments = null;
 
-  constructor(changePopupData) {
-    this.#changePopupData = changePopupData;
+  constructor(changeData) {
+    this.#changeData = changeData;
   }
 
   init = (film) => {
@@ -75,15 +75,15 @@ export default class PopupPresenter {
   }
 
   resetView = () => {
-    this.#closePopup();
+    this.#close();
   }
 
-  openPopup = () => {
+  open = () => {
     openPopup(this.#filmPopupComponent);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
 
-  #closePopup = () => {
+  #close = () => {
     closePopup(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
 
@@ -92,12 +92,12 @@ export default class PopupPresenter {
   #escapeKeydownHandler = (evt) => {
     if(isEscapeKey(evt)) {
       evt.preventDefault();
-      this.#closePopup();
+      this.#close();
     }
   }
 
   #closePopupHandle = () => {
-    this.#closePopup();
+    this.#close();
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
   }
 
@@ -106,14 +106,14 @@ export default class PopupPresenter {
   }
 
   #handleAddToWatchlistPopupClick = () => {
-    this.#changePopupData({...this.#film, isWatchlist: !this.#film.isWatchlist});
+    this.#changeData({...this.#film, isWatchlist: !this.#film.isWatchlist});
   }
 
   #handleAlreadyWatchPopupClick = () => {
-    this.#changePopupData({...this.#film, isHistory: !this.#film.isHistory});
+    this.#changeData({...this.#film, isHistory: !this.#film.isHistory});
   }
 
   #handleAddToFavoritePopupClick = () => {
-    this.#changePopupData({...this.#film, isFavorite: !this.#film.isFavorite});
+    this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
   }
 }
