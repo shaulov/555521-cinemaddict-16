@@ -10,6 +10,7 @@ import PopupPresenter from '../presenter/popup-presenter.js';
 
 
 const FILM_COUNT_PER_STEP = 5;
+const BODY = document.body;
 
 export default class FilmListPresenter {
   #filmsContainer = null;
@@ -22,6 +23,9 @@ export default class FilmListPresenter {
   #listFilms = [];
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filmPresenter = new Map();
+
+  #popupPresenter = null;
+  #currentPopupId = null;
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -41,6 +45,9 @@ export default class FilmListPresenter {
   #handleFilmChange = (updatedFilm) => {
     this.#listFilms = updateItem(this.#listFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+    if (BODY.contains(document.querySelector('.film-details')) && this.#currentPopupId === updatedFilm.id) {
+      this.#renderPopup(updatedFilm);
+    }
   }
 
   #renderFilm = (film) => {
@@ -50,9 +57,12 @@ export default class FilmListPresenter {
   }
 
   #renderPopup = (film) => {
-    const popupPresenter = new PopupPresenter(this.#handleFilmChange);
-    popupPresenter.init(film);
-    popupPresenter.open();
+    this.#popupPresenter = new PopupPresenter(BODY, this.#handleFilmChange);
+    this.#popupPresenter.init(film);
+    this.#currentPopupId = film.id;
+    if (!BODY.contains(document.querySelector('.film-details'))) {
+      this.#popupPresenter.open();
+    }
   }
 
   #renderFilms = (from, to) => {

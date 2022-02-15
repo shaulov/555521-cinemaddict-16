@@ -5,25 +5,26 @@ import FilmCommentContainerView from '../view/comment-container-view.js';
 import CommentListView from '../view/comment-list-view.js';
 import FilmCommentView from '../view/comment-view.js';
 import NewCommentView from '../view/new-comment-view.js';
-import {openPopup, closePopup} from '../popup.js';
 import {isEscapeKey} from '../ustil.js';
 import {COMMENTS} from '../mock/film.js';
 import {remove, render, replace, RenderPosition} from '../render.js';
 
 export default class PopupPresenter {
   #film = null;
+  #popupContainer = null;
   #changeData = null;
 
   #filmPopupComponent = null;
   #popupTopComponent = null;
-  #filmPopupBottomComponent = null;
-  #filmCommentContainerComponent = null;
+  #popupBottomComponent = null;
+  #commentContainerComponent = null;
   #commentListComponent = null;
   #filmCommentComponent = null;
   #newCommentComponent = null;
   #filmComments = null;
 
-  constructor(changeData) {
+  constructor(popupContainer, changeData) {
+    this.#popupContainer = popupContainer;
     this.#changeData = changeData;
   }
 
@@ -34,8 +35,8 @@ export default class PopupPresenter {
 
     this.#filmPopupComponent = new PopupContainerView();
     this.#popupTopComponent = new PopupTopView(this.#film);
-    this.#filmPopupBottomComponent = new InfoPopupBottomView();
-    this.#filmCommentContainerComponent = new FilmCommentContainerView(COMMENTS[this.#film.comments].length);
+    this.#popupBottomComponent = new InfoPopupBottomView();
+    this.#commentContainerComponent = new FilmCommentContainerView(COMMENTS[this.#film.comments].length);
     this.#commentListComponent = new CommentListView();
     this.#newCommentComponent = new NewCommentView();
     this.#filmComments = COMMENTS[this.#film.comments];
@@ -45,16 +46,16 @@ export default class PopupPresenter {
     this.#popupTopComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchPopupClick);
     this.#popupTopComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoritePopupClick);
 
-    render(this.#filmPopupComponent, this.#filmPopupBottomComponent, RenderPosition.BEFOREEND);
-    render(this.#filmPopupBottomComponent, this.#filmCommentContainerComponent, RenderPosition.BEFOREEND);
-    render(this.#filmCommentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
+    render(this.#filmPopupComponent, this.#popupBottomComponent, RenderPosition.BEFOREEND);
+    render(this.#popupBottomComponent, this.#commentContainerComponent, RenderPosition.BEFOREEND);
+    render(this.#commentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
 
     for (let i = 0; i < this.#filmComments.length; i++) {
       this.#filmCommentComponent = new FilmCommentView(this.#filmComments[i]);
       render(this.#commentListComponent, this.#filmCommentComponent, RenderPosition.BEFOREEND);
     }
 
-    render(this.#filmCommentContainerComponent, this.#newCommentComponent, RenderPosition.BEFOREEND);
+    render(this.#commentContainerComponent, this.#newCommentComponent, RenderPosition.BEFOREEND);
 
     if (prevPopupTopComponent === null) {
       render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.AFTERBEGIN);
@@ -71,8 +72,8 @@ export default class PopupPresenter {
   destroy = () => {
     remove(this.#filmPopupComponent);
     remove(this.#popupTopComponent);
-    remove(this.#filmPopupBottomComponent);
-    remove(this.#filmCommentContainerComponent);
+    remove(this.#popupBottomComponent);
+    remove(this.#commentContainerComponent);
     remove(this.#commentListComponent);
     remove(this.#filmCommentComponent);
     remove(this.#newCommentComponent);
@@ -83,12 +84,12 @@ export default class PopupPresenter {
   }
 
   open = () => {
-    openPopup(this.#filmPopupComponent);
+    render(this.#popupContainer, this.#filmPopupComponent, RenderPosition.BEFOREEND);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
 
   #close = () => {
-    closePopup(this.#filmPopupComponent);
+    remove(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
 
   }
