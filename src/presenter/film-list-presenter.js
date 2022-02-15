@@ -26,6 +26,7 @@ export default class FilmListPresenter {
 
   #popupPresenter = null;
   #currentPopupId = null;
+  #popupPosition = null;
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -46,7 +47,10 @@ export default class FilmListPresenter {
     this.#listFilms = updateItem(this.#listFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
     if (BODY.contains(document.querySelector('.film-details')) && this.#currentPopupId === updatedFilm.id) {
+      const scrollPosition = this.#popupPresenter.popupPosition;
+      this.#popupPresenter.resetView();
       this.#renderPopup(updatedFilm);
+      this.#popupPresenter.popupPosition = scrollPosition;
     }
   }
 

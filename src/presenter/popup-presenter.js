@@ -7,7 +7,7 @@ import FilmCommentView from '../view/comment-view.js';
 import NewCommentView from '../view/new-comment-view.js';
 import {isEscapeKey} from '../ustil.js';
 import {COMMENTS} from '../mock/film.js';
-import {remove, render, replace, RenderPosition} from '../render.js';
+import {remove, render, RenderPosition} from '../render.js';
 
 export default class PopupPresenter {
   #film = null;
@@ -31,8 +31,6 @@ export default class PopupPresenter {
   init = (film) => {
     this.#film = film;
 
-    const prevPopupTopComponent = this.#popupTopComponent;
-
     this.#filmPopupComponent = new PopupContainerView();
     this.#popupTopComponent = new PopupTopView(this.#film);
     this.#popupBottomComponent = new InfoPopupBottomView();
@@ -46,6 +44,7 @@ export default class PopupPresenter {
     this.#popupTopComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchPopupClick);
     this.#popupTopComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoritePopupClick);
 
+    render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.BEFOREEND);
     render(this.#filmPopupComponent, this.#popupBottomComponent, RenderPosition.BEFOREEND);
     render(this.#popupBottomComponent, this.#commentContainerComponent, RenderPosition.BEFOREEND);
     render(this.#commentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
@@ -56,17 +55,6 @@ export default class PopupPresenter {
     }
 
     render(this.#commentContainerComponent, this.#newCommentComponent, RenderPosition.BEFOREEND);
-
-    if (prevPopupTopComponent === null) {
-      render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.AFTERBEGIN);
-      return;
-    }
-
-    if(this.#filmPopupComponent.element.contains(prevPopupTopComponent.element)) {
-      replace(this.#popupTopComponent, prevPopupTopComponent);
-    }
-
-    remove(prevPopupTopComponent);
   }
 
   destroy = () => {
@@ -80,15 +68,18 @@ export default class PopupPresenter {
   }
 
   resetView = () => {
+    this.popupPosition = this.#filmPopupComponent.element.scrollTop;
     this.#close();
   }
 
   open = () => {
+    document.body.classList.add('hide-overflow');
     render(this.#popupContainer, this.#filmPopupComponent, RenderPosition.BEFOREEND);
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
 
   #close = () => {
+    document.body.classList.remove('hide-overflow');
     remove(this.#filmPopupComponent);
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
 
@@ -116,5 +107,13 @@ export default class PopupPresenter {
 
   #handleAddToFavoritePopupClick = () => {
     this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+  }
+
+  get popupPosition () {
+    return this.#filmPopupComponent.element.scrollTop;
+  }
+
+  set popupPosition (position) {
+    this.#filmPopupComponent.element.scrollTop = position;
   }
 }
