@@ -76,7 +76,7 @@ const createPopupTopTemplate = ({name, originalName, poster, ageRating, rating, 
   );
 };
 
-export default class InfoPopupBottomView extends AbstractView {
+export default class PopupTopView extends AbstractView {
   #popupTopInfo = null;
 
   constructor(popupTopInfo) {

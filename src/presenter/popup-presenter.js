@@ -1,6 +1,6 @@
 import PopupContainerView from '../view/popup-container-view.js';
 import PopupTopView from '../view/popup-top-view.js';
-import InfoPopupBottomView from '../view/popup-bottom-view.js';
+import PopupBottomView from '../view/popup-bottom-view.js';
 import FilmCommentContainerView from '../view/comment-container-view.js';
 import CommentListView from '../view/comment-list-view.js';
 import FilmCommentView from '../view/comment-view.js';
@@ -33,7 +33,7 @@ export default class PopupPresenter {
 
     this.#filmPopupComponent = new PopupContainerView();
     this.#popupTopComponent = new PopupTopView(this.#film);
-    this.#popupBottomComponent = new InfoPopupBottomView();
+    this.#popupBottomComponent = new PopupBottomView();
     this.#commentContainerComponent = new FilmCommentContainerView(COMMENTS[this.#film.comments].length);
     this.#commentListComponent = new CommentListView();
     this.#newCommentComponent = new NewCommentView();
