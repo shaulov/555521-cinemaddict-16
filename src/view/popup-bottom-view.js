@@ -6,7 +6,7 @@ const createPopupBottomTemplate = () => (
   </div>`
 );
 
-export default class InfoPopupBottomView extends AbstractView {
+export default class PopupBottomView extends AbstractView {
   get template() {
     return createPopupBottomTemplate();
   }

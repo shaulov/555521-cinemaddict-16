@@ -1,19 +1,20 @@
 import CardView from '../view/card-view.js';
 import {remove, replace, render, RenderPosition} from '../render.js';
+import PopupPresenter from '../presenter/popup-presenter.js';
 
 export default class FilmPresenter {
   #filmContainer = null;
   #changeData = null;
-  #renderPopup = null;
 
   #filmComponent = null;
 
   #film = null;
+  #popupPresenter = null;
+  #currentPopupId = null;
 
-  constructor(filmContainer, changeData, renderPopup) {
+  constructor(filmContainer, changeData) {
     this.#filmContainer = filmContainer;
     this.#changeData = changeData;
-    this.#renderPopup = renderPopup;
   }
 
   init = (film) => {
@@ -41,6 +42,12 @@ export default class FilmPresenter {
 
   destroy = () => {
     remove(this.#filmComponent);
+  }
+
+  #renderPopup = (film) => {
+    this.#popupPresenter = new PopupPresenter(this.#changeData);
+    this.#popupPresenter.init(film);
+    this.#currentPopupId = film.id;
   }
 
   #handleCardClick = () => {

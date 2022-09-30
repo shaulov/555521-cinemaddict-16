@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 
 const createPopupTopTemplate = ({name, originalName, poster, ageRating, rating, director, writers, cast, realiseDate, duration, country, genres, description, isWatchlist, isHistory, isFavorite}) => {
   const fragment = document.createElement('div');
@@ -76,7 +76,7 @@ const createPopupTopTemplate = ({name, originalName, poster, ageRating, rating, 
   );
 };
 
-export default class InfoPopupBottomView extends AbstractView {
+export default class PopupTopView extends SmartView {
   #popupTopInfo = null;
 
   constructor(popupTopInfo) {
@@ -86,6 +86,13 @@ export default class InfoPopupBottomView extends AbstractView {
 
   get template() {
     return createPopupTopTemplate(this.#popupTopInfo);
+  }
+
+  restoreHandlers = () => {
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setAddToWatchlistClickHandler(this._callback.addToWatchlistClick);
+    this.setAlreadyWatchClickHandler(this._callback.alreadyWatchClick);
+    this.setAddToFavoriteClickHandler(this._callback.addToFavoriteClick);
   }
 
   setCloseClickHandler = (callback) => {
