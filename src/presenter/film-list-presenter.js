@@ -6,11 +6,9 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import {updateItem} from '../ustil.js';
 import {render, RenderPosition, remove} from '../render.js';
 import FilmPresenter from './film-presenter.js';
-import PopupPresenter from '../presenter/popup-presenter.js';
 
 
 const FILM_COUNT_PER_STEP = 5;
-const BODY = document.body;
 
 export default class FilmListPresenter {
   #filmsContainer = null;
@@ -23,10 +21,6 @@ export default class FilmListPresenter {
   #listFilms = [];
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filmPresenter = new Map();
-
-  #popupPresenter = null;
-  #currentPopupId = null;
-  #popupPosition = null;
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -46,27 +40,12 @@ export default class FilmListPresenter {
   #handleFilmChange = (updatedFilm) => {
     this.#listFilms = updateItem(this.#listFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-    if (BODY.contains(document.querySelector('.film-details')) && this.#currentPopupId === updatedFilm.id) {
-      const scrollPosition = this.#popupPresenter.popupPosition;
-      this.#popupPresenter.resetView();
-      this.#renderPopup(updatedFilm);
-      this.#popupPresenter.popupPosition = scrollPosition;
-    }
   }
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange, this.#renderPopup);
+    const filmPresenter = new FilmPresenter(this.#filmListContainerComponent, this.#handleFilmChange);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
-  }
-
-  #renderPopup = (film) => {
-    this.#popupPresenter = new PopupPresenter(BODY, this.#handleFilmChange);
-    this.#popupPresenter.init(film);
-    this.#currentPopupId = film.id;
-    if (!BODY.contains(document.querySelector('.film-details'))) {
-      this.#popupPresenter.open();
-    }
   }
 
   #renderFilms = (from, to) => {

@@ -11,10 +11,10 @@ import {remove, render, RenderPosition} from '../render.js';
 
 export default class PopupPresenter {
   #film = null;
-  #popupContainer = null;
+  #popupContainer = document.body;
   #changeData = null;
 
-  #filmPopupComponent = null;
+  #popupComponent = null;
   #popupTopComponent = null;
   #popupBottomComponent = null;
   #commentContainerComponent = null;
@@ -23,15 +23,14 @@ export default class PopupPresenter {
   #newCommentComponent = null;
   #filmComments = null;
 
-  constructor(popupContainer, changeData) {
-    this.#popupContainer = popupContainer;
+  constructor (changeData) {
     this.#changeData = changeData;
   }
 
   init = (film) => {
     this.#film = film;
 
-    this.#filmPopupComponent = new PopupContainerView();
+    this.#popupComponent = new PopupContainerView();
     this.#popupTopComponent = new PopupTopView(this.#film);
     this.#popupBottomComponent = new PopupBottomView();
     this.#commentContainerComponent = new FilmCommentContainerView(COMMENTS[this.#film.comments].length);
@@ -39,13 +38,15 @@ export default class PopupPresenter {
     this.#newCommentComponent = new NewCommentView();
     this.#filmComments = COMMENTS[this.#film.comments];
 
+    this.setEscapeKeydownHandler();
     this.#popupTopComponent.setCloseClickHandler(this.#closePopupHandle);
     this.#popupTopComponent.setAddToWatchlistClickHandler(this.#handleAddToWatchlistPopupClick);
     this.#popupTopComponent.setAlreadyWatchClickHandler(this.#handleAlreadyWatchPopupClick);
     this.#popupTopComponent.setAddToFavoriteClickHandler(this.#handleAddToFavoritePopupClick);
 
-    render(this.#filmPopupComponent, this.#popupTopComponent, RenderPosition.BEFOREEND);
-    render(this.#filmPopupComponent, this.#popupBottomComponent, RenderPosition.BEFOREEND);
+    render(this.#popupContainer, this.#popupComponent, RenderPosition.BEFOREEND);
+    render(this.#popupComponent, this.#popupTopComponent, RenderPosition.BEFOREEND);
+    render(this.#popupComponent, this.#popupBottomComponent, RenderPosition.BEFOREEND);
     render(this.#popupBottomComponent, this.#commentContainerComponent, RenderPosition.BEFOREEND);
     render(this.#commentContainerComponent, this.#commentListComponent, RenderPosition.BEFOREEND);
 
@@ -58,7 +59,7 @@ export default class PopupPresenter {
   }
 
   destroy = () => {
-    remove(this.#filmPopupComponent);
+    remove(this.#popupComponent);
     remove(this.#popupTopComponent);
     remove(this.#popupBottomComponent);
     remove(this.#commentContainerComponent);
@@ -68,19 +69,17 @@ export default class PopupPresenter {
   }
 
   resetView = () => {
-    this.popupPosition = this.#filmPopupComponent.element.scrollTop;
-    this.#close();
+    this.popupPosition = this.#popupComponent.element.scrollTop;
   }
 
-  open = () => {
-    document.body.classList.add('hide-overflow');
-    render(this.#popupContainer, this.#filmPopupComponent, RenderPosition.BEFOREEND);
+  setEscapeKeydownHandler = () => {
+    this.#popupContainer.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escapeKeydownHandler);
   }
 
   #close = () => {
     document.body.classList.remove('hide-overflow');
-    remove(this.#filmPopupComponent);
+    remove(this.#popupComponent);
     document.removeEventListener('keydown', this.#escapeKeydownHandler);
 
   }
@@ -99,21 +98,24 @@ export default class PopupPresenter {
 
   #handleAddToWatchlistPopupClick = () => {
     this.#changeData({...this.#film, isWatchlist: !this.#film.isWatchlist});
+    this.#popupTopComponent.updateData({...this.#film, isWatchlist: !this.#film.isWatchlist}, false);
   }
 
   #handleAlreadyWatchPopupClick = () => {
     this.#changeData({...this.#film, isHistory: !this.#film.isHistory});
+    this.#popupTopComponent.updateData({...this.#film, isHistory: !this.#film.isHistory}, false);
   }
 
   #handleAddToFavoritePopupClick = () => {
     this.#changeData({...this.#film, isFavorite: !this.#film.isFavorite});
+    this.#popupTopComponent.updateData({...this.#film, isFavorite: !this.#film.isFavorite}, false);
   }
 
   get popupPosition () {
-    return this.#filmPopupComponent.element.scrollTop;
+    return this.#popupComponent.element.scrollTop;
   }
 
   set popupPosition (position) {
-    this.#filmPopupComponent.element.scrollTop = position;
+    this.#popupComponent.element.scrollTop = position;
   }
 }
